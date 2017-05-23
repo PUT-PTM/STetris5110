@@ -150,8 +150,8 @@ for(i=n-1;i>0;i--)for(j=0;j<WIDTH;j++){
 }
 void zakonczgre()
 {
-PCD8544_Clear();
-//Go to x=14, y=3 position
+
+
    PCD8544_GotoXY(24, 48);
 
    //Print data with Pixel Set mode and Fontsize of 5x7px
@@ -160,11 +160,7 @@ PCD8544_Clear();
    PCD8544_Refresh();
 }
 
-//void print()
-//{
 
-
-//}
 
 void TIM3_IRQHandler()//TIMER odpowiedzialny za "ticki" gry i "spadanie" klocków. f= 1Hz
 {
@@ -201,14 +197,15 @@ void TIM3_IRQHandler()//TIMER odpowiedzialny za "ticki" gry i "spadanie" klocków
             	                 tab[i][j].spawned=0;
             	                 }
             	 }
-
+            	 int suma=0;
             	 for(j=0;j<LENGTH;j++)
             	     {
-            	         int suma=0;
+
             	         for(i=0;i<WIDTH;i++){
             	         suma+=tab[i][j].jest;
             	         }
             	         if(suma==WIDTH)wszystkowdol(j);
+            	         suma=0;
             	 }
             	 for(i=0;i<WIDTH;i++)if(tab[i][0].utw==1)zakonczgre();
             	 PCD8544_Clear();
@@ -282,9 +279,9 @@ void EXTI0_IRQHandler(void) {
     }
 }
 
-/* Handle PB12 interrupt */
+
 void EXTI15_10_IRQHandler(void) {
-    /* Make sure that interrupt flag is set */
+
     if (EXTI_GetITStatus(EXTI_Line12) != RESET) {
     	int i,j;
     	int flag=1;
@@ -304,19 +301,20 @@ void EXTI15_10_IRQHandler(void) {
     					{
     					  for(i=WIDTH-1;i>-1;i--)
     					  {
-    						  if(flag)
-    						  {
-    							  if(tab[i][j].utw==0){
-    							  tab[i+1][j].jest=tab[i][j].jest;
-    						      tab[i+1][j].spawned=tab[i][j].spawned;
-    						      tab[i+1][j].utw=tab[i][j].utw;
-    						      tab[i][j].spawned=0;
-    						      tab[i][j].utw=0;
-    						      tab[i][j].jest=0;
-    							  }
+    						  if(flag&&tab[i][j].spawned==1)
+    						     						  {
+    						     							  if(tab[i][j].utw==0&&tab[i][j].spawned==1){
+    						     							  tab[i+1][j].jest=tab[i][j].jest;
+    						     						      tab[i+1][j].spawned=tab[i][j].spawned;
+    						     						      tab[i+1][j].utw=tab[i][j].utw;
+    						     						      tab[i][j].spawned=0;
+    						     						      tab[i][j].utw=0;
+    						     						      tab[i][j].jest=0;
+    						     							  }
+    						     					  	  }
     					  	  }
     					   }
-    					}
+
 
 
         EXTI_ClearITPendingBit(EXTI_Line12);
@@ -347,8 +345,8 @@ int main(void)
 
 
 		TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
-		TIM_TimeBaseStructure.TIM_Period = 839;
-		TIM_TimeBaseStructure.TIM_Prescaler = 999;
+		TIM_TimeBaseStructure.TIM_Period = 209;
+		TIM_TimeBaseStructure.TIM_Prescaler = 249;
 		TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 		TIM_TimeBaseStructure.TIM_CounterMode =  TIM_CounterMode_Up;
 		TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
@@ -390,6 +388,7 @@ int main(void)
 			NVIC_Init(&NVIC_InitStructure2);
 			TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 			TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
+
 			Configure_PD0();
 			Configure_PB12();
 
@@ -410,15 +409,15 @@ int main(void)
 	 	PCD8544_Init(0x38);
 
 	 	while(1){
-	 		if(TIM_GetFlagStatus(TIM2, TIM_FLAG_Update)) {
+	 /*	if(TIM_GetFlagStatus(TIM2, TIM_FLAG_Update)) {
 
-	 		    		TIM_ClearFlag(TIM2, TIM_FLAG_Update);
+	 		  TIM_ClearFlag(TIM2, TIM_FLAG_Update);
 	 		}
 	 		if(TIM_GetFlagStatus(TIM3, TIM_FLAG_Update)) {
 
-	 			 		    		TIM_ClearFlag(TIM3, TIM_FLAG_Update);
+	 			TIM_ClearFlag(TIM3, TIM_FLAG_Update);
 	 			 		}
-
+*/
 	 	}
 
 
