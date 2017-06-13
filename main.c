@@ -99,21 +99,23 @@ int current;
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 void rotacja(){
 int i,j;
-for(j=LENGTH-1;j>0;j--)for(i=0;i<WIDTH;i++){
+if(current==1)return;
+for(j=LENGTH-1;j>=0;j--)for(i=0;i<WIDTH;i++){
 	if(tab[i][j].spawned==1){
 		height=j;
 		br=i;
+		break;
 
 	}
 	}
 
-
-if(current==0&&tab[br][height].jest==0 && tab[br][height+1].jest==0 && tab[br+1][height+1].jest==0 && tab[br+1][height+2].jest==0){
-	for(j=0;j<LENGTH;j++)for(i=0;i<WIDTH;i++)if(tab[i][j].spawned)
+for(j=0;j<LENGTH;j++)for(i=0;i<WIDTH;i++)if(tab[i][j].spawned)
 	{
 		tab[i][j].jest=0;
 		tab[i][j].spawned=0;
 	}
+if(current==0&&tab[br][height].jest==0 && tab[br][height+1].jest==0 && tab[br+1][height+1].jest==0 && tab[br+1][height+2].jest==0){
+
 
     tab[br][height].jest=1;
 	tab[br][height+1].jest=1;
@@ -128,11 +130,6 @@ if(current==0&&tab[br][height].jest==0 && tab[br][height+1].jest==0 && tab[br+1]
 	return;
 	}
 if(current==2&&tab[br][height].jest==0&&tab[br][height+1].jest==0&&tab[br-1][height+1].jest==0&&tab[br+1][height].jest==0){
-for(j=0;j<LENGTH;j++)for(i=0;i<WIDTH;i++)if(tab[i][j].spawned)
-	{
-		tab[i][j].jest=0;
-		tab[i][j].spawned=0;
-	}
 
 	tab[br][height].jest=1;
 	tab[br][height+1].jest=1;
@@ -147,11 +144,7 @@ for(j=0;j<LENGTH;j++)for(i=0;i<WIDTH;i++)if(tab[i][j].spawned)
 }
 if(current==3&&tab[br][height].jest==0&&tab[br][height+1].jest==0&&tab[br][height+2].jest==0&&tab[br][height+3].jest==0)
 {
-	for(j=0;j<LENGTH;j++)for(i=0;i<WIDTH;i++)if(tab[i][j].spawned)
-	{
-		tab[i][j].jest=0;
-		tab[i][j].spawned=0;
-	}
+
 
 
 	tab[br][height].jest=1;
@@ -170,11 +163,6 @@ if(current==3&&tab[br][height].jest==0&&tab[br][height+1].jest==0&&tab[br][heigh
 }
 if(current==4&&tab[br][height].jest==0&&tab[br-1][height].jest==0&&tab[br+1][height].jest==0&&tab[br+2][height].jest==0)
 {
-for(j=0;j<LENGTH;j++)for(i=0;i<WIDTH;i++)if(tab[i][j].spawned)
-	{
-		tab[i][j].jest=0;
-		tab[i][j].spawned=0;
-	}
 
     tab[br][height].jest=1;
 	tab[br+2][height].jest=1;
@@ -328,18 +316,14 @@ for(k=0;k<WIDTH;k++)
       }
     }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-void zakonczgre()
-{
 
-
-}
 void utwspawned()
 {
 	int i,j;
 	for(j=0;j<LENGTH;j++)for(i=0;i<WIDTH;i++)if(tab[i][j].spawned)
 	{
 	tab[i][j].utw=1;
-	if(j==0)zakonczgre();
+
 	}
 	for(j=0;j<LENGTH;j++)for(i=0;i<WIDTH;i++)tab[i][j].spawned=0;
 	spawn();
